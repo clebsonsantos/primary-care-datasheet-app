@@ -1,0 +1,16 @@
+{
+    "id": "8573f297-ada6-4026-a35f-b3d4a08ac529",
+    "version": "0.0.1",
+    "requiredApiVersion": "^1.19.0",
+    "iconFile": "icon.png",
+    "author": {
+        "name": "Clebson Santos",
+        "homepage": "https://github.com/clebsonsantos",
+        "support": "https://github.com/clebsonsantos"
+    },
+    "name": "OB.Care Data Sheets",
+    "nameSlug": "obcare-data-sheets",
+    "classFile": "ObCareDataSheetsApp.ts",
+    "description": "Data sheets for the OB.Care platform",
+    "implements": []
+}
