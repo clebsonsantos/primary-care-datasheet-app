@@ -6,6 +6,7 @@ dist/
 build.sh
 coverage
 .nyc_output
+google-credentials.json
 
 # JetBrains IDEs
 out/

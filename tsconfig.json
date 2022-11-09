@@ -3,7 +3,6 @@
       "incremental": true,
       "outDir": "dist",
       "target": "es2018",
-      "rootDirs": ["src", "tests"],
       "module": "commonjs",
       "moduleResolution": "node",
       "declaration": false,
