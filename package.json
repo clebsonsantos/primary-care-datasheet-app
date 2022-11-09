@@ -25,8 +25,8 @@
     "scripts": {
         "lint": "eslint .",
         "lint:fix": "npm run lint -- --fix",
-        "test": "mocha -r ts-node/register --recursive tests/**/*.spec.ts",
-        "test:coverage": "npx nyc --reporter cobertura mocha -r ts-node/register --recursive tests/**/*.spec.ts",
+        "test": "mocha -r ts-node/register --exit tests/**",
+        "test:coverage": "npx nyc --reporter html npm test",
         "test:staged": "mocha -r ts-node/register --recursive $(git diff --name-only | grep .spec.ts)",
         "prepare": "husky install"
     }
