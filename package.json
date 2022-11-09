@@ -1,6 +1,8 @@
 {
     "devDependencies": {
+        "@istanbuljs/nyc-config-typescript": "^1.0.2",
         "@rocket.chat/apps-engine": "^1.19.0",
+        "@types/chai": "^4.3.4",
         "@types/mocha": "^10.0.0",
         "@types/node": "^14.14.6",
         "@typescript-eslint/eslint-plugin": "^5.42.1",
@@ -24,7 +26,7 @@
         "lint": "eslint .",
         "lint:fix": "npm run lint -- --fix",
         "test": "mocha -r ts-node/register --recursive tests/**/*.spec.ts",
-        "test:coverage": "npx nyc --reporter html mocha -r ts-node/register --recursive tests/**/*.spec.ts",
+        "test:coverage": "npx nyc --reporter cobertura mocha -r ts-node/register --recursive tests/**/*.spec.ts",
         "test:staged": "mocha -r ts-node/register --recursive $(git diff --name-only | grep .spec.ts)",
         "prepare": "husky install"
     }
