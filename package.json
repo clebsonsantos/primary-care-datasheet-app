@@ -25,7 +25,7 @@
         "lint:fix": "npm run lint -- --fix",
         "test": "mocha -r ts-node/register --recursive tests/**/*.spec.ts",
         "test:coverage": "npx nyc --reporter html mocha -r ts-node/register --recursive tests/**/*.spec.ts",
-        "test:staged": "npm test -- --findRelatedTests",
+        "test:staged": "mocha -r ts-node/register --recursive $(git diff --name-only | grep .spec.ts)",
         "prepare": "husky install"
     }
 }
