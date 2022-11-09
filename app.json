@@ -8,9 +8,9 @@
         "homepage": "https://github.com/clebsonsantos",
         "support": "https://github.com/clebsonsantos"
     },
-    "name": "OB.Care Data Sheets",
-    "nameSlug": "obcare-data-sheets",
-    "classFile": "ObCareDataSheetsApp.ts",
-    "description": "Data sheets for the OB.Care platform",
+    "name": "Primary.Care Data Sheets",
+    "nameSlug": "primarycare-data-sheets",
+    "classFile": "PrimaryCareDataSheetsApp.ts",
+    "description": "Data sheets for the Primary.Care platform",
     "implements": []
 }
