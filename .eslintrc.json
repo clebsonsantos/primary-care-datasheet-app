@@ -22,7 +22,8 @@
         "@typescript-eslint/no-invalid-void-type": "warn",
         "@typescript-eslint/no-namespace": "off",
         "@typescript-eslint/no-useless-constructor": "off",
-        "@typescript-eslint/quotes": ["error", "double",  { "allowTemplateLiterals": true }]
+        "@typescript-eslint/quotes": ["error", "double",  { "allowTemplateLiterals": true }],
+        "@typescript-eslint/strict-boolean-expressions": "off"
     },
     "ignorePatterns": ["tests/**/*.spec.ts", "dist/**", "coverage/**"],
     "root": true
