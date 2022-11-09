@@ -8,8 +8,8 @@
         "homepage": "https://github.com/clebsonsantos",
         "support": "https://github.com/clebsonsantos"
     },
-    "name": "Primary.Care Data Sheets",
-    "nameSlug": "primarycare-data-sheets",
+    "name": "PrimaryCare.Chat Data Sheets",
+    "nameSlug": "primarycare-chat-data-sheets",
     "classFile": "PrimaryCareDataSheetsApp.ts",
     "description": "Data sheets for the Primary.Care platform",
     "implements": []
