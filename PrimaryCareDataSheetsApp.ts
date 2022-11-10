@@ -10,7 +10,7 @@ import { IAppInfo } from "@rocket.chat/apps-engine/definition/metadata"
 import { Environments } from "./src/domain/entities/environments"
 import { Settings } from "./src/main/config/settings"
 
-export class ObCareDataSheetsApp extends App {
+export class PrimaryCareDataSheetsApp extends App {
   public environments: Environments
   private settingsRead: ISettingRead
 
