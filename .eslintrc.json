@@ -23,7 +23,8 @@
         "@typescript-eslint/no-namespace": "off",
         "@typescript-eslint/no-useless-constructor": "off",
         "@typescript-eslint/quotes": ["error", "double",  { "allowTemplateLiterals": true }],
-        "@typescript-eslint/strict-boolean-expressions": "off"
+        "@typescript-eslint/strict-boolean-expressions": "off",
+        "@typescript-eslint/consistent-type-definitions": "off"
     },
     "ignorePatterns": ["tests/**/*.spec.ts", "dist/**", "coverage/**"],
     "root": true
