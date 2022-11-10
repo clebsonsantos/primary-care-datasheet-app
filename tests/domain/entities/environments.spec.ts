@@ -11,6 +11,9 @@ let data: Omit<Environments, "getValue" | "isValid">
             googleCrendentials: {
                 test: "test"
             },
+            fieldsHeader: ["test", "test"],
+            spreadSheetPageName: "Test",
+            urlApiConnector: "https://api-test.ts"
         }
     })
 
