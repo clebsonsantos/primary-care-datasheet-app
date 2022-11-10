@@ -37,6 +37,9 @@ export class PrimaryCareDataSheetsApp extends App {
   private async readEnvironmentSettings (): Promise<void> {
     const envSettings = new Environments({
       spreadsheetsId: await this.settingsRead.getValueById("SPREADSHEET_ID"),
+      urlApiConnector: await this.settingsRead.getValueById("SPREADSHEET_CONNECTOR_URL_API"),
+      fieldsHeader: await this.settingsRead.getValueById("FIELDS_SPREADSHEET_HEADER").then(value => value.split(",")),
+      spreadSheetPageName: await this.settingsRead.getValueById("SPREADSHEET_PAGE_NAME"),
       googleCrendentials: await this.settingsRead.getValueById("GOOGLE_CREDENTIALS").then(value => JSON.parse(value))
     })
     if (envSettings.isValid()) {
