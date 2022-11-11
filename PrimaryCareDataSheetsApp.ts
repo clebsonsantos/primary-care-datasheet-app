@@ -7,10 +7,14 @@ import {
 } from "@rocket.chat/apps-engine/definition/accessors"
 import { App } from "@rocket.chat/apps-engine/definition/App"
 import { IAppInfo } from "@rocket.chat/apps-engine/definition/metadata"
+import { IUIKitInteractionHandler, IUIKitResponse, UIKitViewSubmitInteractionContext } from "@rocket.chat/apps-engine/definition/uikit"
 import { Environments } from "./src/domain/entities/environments"
+import { InserDataSheetValues } from "./src/domain/usecases/insert-data-sheet-values"
+import { GoogleSpreadSheets } from "./src/infra/gateways/google-spreadsheets"
+import { SubmitSlashcommand } from "./src/presentation/controllers/commands/submit-slashcommand"
 import { Settings } from "./src/main/config/settings"
 
-export class PrimaryCareDataSheetsApp extends App {
+export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHandler {
   public environments: Environments
   private settingsRead: ISettingRead
 
@@ -27,11 +31,29 @@ export class PrimaryCareDataSheetsApp extends App {
     }
   }
 
+  public async executeViewSubmitHandler (
+    context: UIKitViewSubmitInteractionContext
+  ): Promise<IUIKitResponse> {
+    const data = context.getInteractionData()
+    try {
+      await this.makeInsertDataSheetValues(data.view.state as object)
+      return {
+        success: true
+      }
+    } catch (error) {
+      return context.getInteractionResponder().viewErrorResponse({
+        viewId: data.view.id,
+        errors: error
+      })
+    }
+  }
+
   protected async extendConfiguration (configuration: IConfigurationExtend, environmentRead: IEnvironmentRead): Promise<void> {
     const settings = new Settings(configuration)
     await settings.createSettings()
     this.settingsRead = environmentRead.getSettings()
     await this.readEnvironmentSettings()
+    await configuration.slashCommands.provideSlashCommand(new SubmitSlashcommand())
   }
 
   private async readEnvironmentSettings (): Promise<void> {
@@ -50,5 +72,20 @@ export class PrimaryCareDataSheetsApp extends App {
   private async loadSettings (): Promise<void> {
     await this.readEnvironmentSettings()
     this.getLogger().log(`SUCCESSFULLY CONFIGURED ENVIRONMENT`)
+  }
+
+  private async makeInsertDataSheetValues (data: object): Promise<void> {
+    const body = {}
+    for (const [key, value] of Object.entries(data)) {
+      body[key] = value[key]
+    }
+
+    const spreadsheetConnector = new GoogleSpreadSheets(this.environments, this.getAccessors().http)
+    const service = new InserDataSheetValues(spreadsheetConnector)
+    const result = await service.perform(body)
+
+    result.isLeft()
+      ? this.getLogger().log("Error in InserDataSheetValues", result.value)
+      : this.getLogger().log("Your record has been successfully entered", result.value)
   }
 }

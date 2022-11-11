@@ -11,6 +11,8 @@
     "name": "PrimaryCare.Chat Data Sheets",
     "nameSlug": "primarycare-chat-data-sheets",
     "classFile": "PrimaryCareDataSheetsApp.ts",
-    "description": "Data sheets for the Primary.Care platform",
-    "implements": []
+    "description": "Data sheets for the PrimaryCare.Chat platform",
+    "implements": [
+        "IUIKitInteractionHandler"
+    ]
 }
