@@ -1,6 +1,6 @@
 import { IHttp, IModify, IPersistence, IRead } from "@rocket.chat/apps-engine/definition/accessors"
 import { ISlashCommand, SlashCommandContext } from "@rocket.chat/apps-engine/definition/slashcommands"
-import { ContextualBar } from "../../../ui/components/contextual-bar"
+import { ContextualBar } from "../../ui/components/contextual-bar"
 
 export class SubmitSlashcommand implements ISlashCommand {
   public command = "primary-care-bar"
