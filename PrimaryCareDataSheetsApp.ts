@@ -21,7 +21,7 @@ import { viewModalError } from "./src/ui/components/modal-error"
 import { openContextualBar } from "./src/ui/components/contextual-bar"
 import { FindByFieldCommand } from "./src/presentation/commands/find-by-field-slashcommand"
 import { makeChangeDataController } from "./src/main/factories/presentation/controllers/change-data-controller"
-import { generateFilter } from "./src/presentation/utils/generate-filter"
+import { generateFilter } from "./src/main/utils/generate-filter"
 import { makeDataEntryController } from "./src/main/factories/presentation/controllers/data-entry-controller"
 
 export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHandler {
