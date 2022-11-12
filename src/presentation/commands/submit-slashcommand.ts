@@ -15,6 +15,6 @@ export class SubmitSlashcommand implements ISlashCommand {
     const settings = read.getEnvironmentReader().getSettings()
     const fields = await settings.getById("FIELDS_SPREADSHEET_HEADER").then(data => data.value.split(","))
     const view = this.contextualBar(modify, fields)
-    void modify.getUiController().openContextualBarView(view, { triggerId }, user)
+    await modify.getUiController().openContextualBarView(view, { triggerId }, user)
   }
 }

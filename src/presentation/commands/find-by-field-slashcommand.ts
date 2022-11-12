@@ -69,6 +69,6 @@ export class FindByFieldCommand implements ISlashCommand {
       })
     }
 
-    void modify.getUiController().openContextualBarView(view, { triggerId }, user)
+    await modify.getUiController().openContextualBarView(view, { triggerId }, user)
   }
 }
