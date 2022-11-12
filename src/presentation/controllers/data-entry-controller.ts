@@ -1,6 +1,7 @@
 import { InserDataSheet } from "../../domain/usecases/insert-data-sheet-values"
+import { Controller } from "./controller"
 
-export class DataEntryController {
+export class DataEntryController implements Controller {
   constructor (private readonly service: InserDataSheet) {}
 
   async handle (data: object): Promise<Error | object> {
