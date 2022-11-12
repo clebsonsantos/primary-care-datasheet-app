@@ -3,9 +3,9 @@ import { ISlashCommand, SlashCommandContext } from "@rocket.chat/apps-engine/def
 import { ContextualBar } from "../../ui/components/contextual-bar"
 
 export class SubmitSlashcommand implements ISlashCommand {
-  public command = "primary-care-bar"
-  public i18nParamsExample = "open-primary-care-bar"
-  public i18nDescription = "open-primary-care-bar"
+  public command = "primary-care-medical-record"
+  public i18nParamsExample = "open-primary-care-medical-record"
+  public i18nDescription = "open-primary-care-medical-record"
   public providesPreview = false
   constructor (private readonly contextualBar: ContextualBar) {}
 

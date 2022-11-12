@@ -4,9 +4,9 @@ import { ButtonStyle, IOptionObject, TextObjectType } from "@rocket.chat/apps-en
 import { IUIKitContextualBarViewParam } from "@rocket.chat/apps-engine/definition/uikit/UIKitInteractionResponder"
 
 export class FindByFieldCommand implements ISlashCommand {
-  public command = "primary-care-find"
-  public i18nParamsExample = "open-primary-care-find"
-  public i18nDescription = "open-primary-care-find"
+  public command = "primary-care-find-by-field"
+  public i18nParamsExample = "open-primary-care-find-by-field"
+  public i18nDescription = "open-primary-care-find-by-field"
   public providesPreview = false
 
   public async executor (context: SlashCommandContext, read: IRead, modify: IModify, http: IHttp, persis: IPersistence): Promise<void> {
