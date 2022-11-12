@@ -20,6 +20,7 @@ import { Settings } from "./src/main/config/settings"
 import { viewModalSuccess } from "./src/ui/components/modal-success"
 import { viewModalWarning } from "./src/ui/components/modal-warning"
 import { viewModalError } from "./src/ui/components/modal-error"
+import { openContextualBar } from "./src/ui/components/contextual-bar"
 
 export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHandler {
   public environments: Environments
@@ -66,7 +67,7 @@ export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHa
     await settings.createSettings()
     this.settingsRead = environmentRead.getSettings()
     await this.readEnvironmentSettings()
-    await configuration.slashCommands.provideSlashCommand(new SubmitSlashcommand())
+    await configuration.slashCommands.provideSlashCommand(new SubmitSlashcommand(openContextualBar))
   }
 
   private async readEnvironmentSettings (): Promise<void> {
