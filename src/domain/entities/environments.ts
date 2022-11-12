@@ -1,6 +1,7 @@
 interface ObjectKey {
   [key: string]: string
 }
+type Env = Omit<Environments, "empty" | "isValid" | "getValue" | "setFieldsHeader">
 
 export class Environments {
   public spreadsheetsId: string
@@ -9,7 +10,7 @@ export class Environments {
   public spreadSheetPageName: string
   public googleCrendentials: ObjectKey
 
-  constructor (params: Omit<Environments, "empty" | "isValid" | "getValue" | "setFieldsHeader">) {
+  constructor (params: Env) {
     Object.assign(this, params)
   }
 
@@ -40,8 +41,8 @@ export class Environments {
     return this
   }
 
-  public setFieldsHeader (fields: string[]): void {
+  public setFieldsHeader (fields: string[]): this {
     this.fieldsHeader = fields
-    Object.freeze(this)
+    return this
   }
 }

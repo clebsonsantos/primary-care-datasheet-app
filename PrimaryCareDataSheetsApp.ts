@@ -46,10 +46,10 @@ export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHa
     modify: IModify
   ): Promise<IUIKitResponse> {
     const data = context.getInteractionData()
-    this.loadDefaultsFields()
+
     try {
-      const controller = makeDataEntryController(this.environments, this.getAccessors().http)
-      const result = await controller.handle(data)
+      const controller = makeDataEntryController(this.loadDefaultsFields(), this.getAccessors().http)
+      const result = await controller.handle(data.view.state as object)
 
       if (result instanceof Error) {
         return viewModalWarning(modify, context, result.message)
@@ -87,8 +87,8 @@ export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHa
     this.getLogger().log(`SUCCESSFULLY CONFIGURED ENVIRONMENT`)
   }
 
-  private loadDefaultsFields (): void {
+  private loadDefaultsFields (): Environments {
     const defaultFields = ["NAME", "ROOM", "DATE/HOUR", "PHONE VISITOR", "AGENT"]
-    this.environments.setFieldsHeader(defaultFields.concat(this.environments.fieldsHeader))
+    return this.environments.setFieldsHeader(defaultFields.concat(this.environments.fieldsHeader))
   }
 }
