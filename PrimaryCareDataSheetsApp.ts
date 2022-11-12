@@ -53,10 +53,10 @@ export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHa
 
     try {
       if (itsASearch.selected && itsASearch.input.value) {
-        return await this.findData(modify, context, itsASearch)
+        return await this.fetchDataAndRenderOnView(modify, context, itsASearch)
       }
 
-      return await this.creationData(modify, context)
+      return await this.savePatientData(modify, context)
     } catch (error) {
       return viewModalError(modify, context, error.message ?? "An internal server error occurred")
     }
@@ -94,7 +94,7 @@ export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHa
     return this.environments.setFieldsHeader(defaultFields.concat(this.environments.fieldsHeader))
   }
 
-  private async creationData (modify: IModify, context: UIKitViewSubmitInteractionContext): Promise<IUIKitResponse> {
+  private async savePatientData (modify: IModify, context: UIKitViewSubmitInteractionContext): Promise<IUIKitResponse> {
     const data = context.getInteractionData()
 
     const controller = makeDataEntryController(this.loadDefaultsFields(), this.getAccessors().http)
@@ -106,7 +106,7 @@ export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHa
     return viewModalSuccess(modify, context, "Your record has been saved in the spreadsheet")
   }
 
-  private async findData (modify: IModify, context: UIKitViewSubmitInteractionContext, isSelected: any): Promise<IUIKitResponse> {
+  private async fetchDataAndRenderOnView (modify: IModify, context: UIKitViewSubmitInteractionContext, isSelected: any): Promise<IUIKitResponse> {
     const controller = makeChangeDataController(this.loadDefaultsFields(), this.getAccessors().http)
     const result = await controller.handle()
 
@@ -118,9 +118,7 @@ export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHa
     const fieldName: string = isSelected.selected.this
     const value: string = isSelected.input.value
 
-    const findItem = generateFilter(result, fieldName.toLowerCase(), value)
-    this.getLogger().log("Data", findItem)
-    // TODO: Deve ser aberto uma nova barra de contexto com o resultado da pesquisa
-    return viewModalSuccess(modify, context, "Success in search")
+    const patientData = generateFilter(result, fieldName.toLowerCase(), value)
+    return context.getInteractionResponder().openContextualBarViewResponse(openContextualBar(modify, this.environments.fieldsHeader, patientData))
   }
 }
