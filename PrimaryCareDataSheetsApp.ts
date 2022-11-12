@@ -2,7 +2,11 @@ import {
   IAppAccessors,
   IConfigurationExtend,
   IEnvironmentRead,
+  IHttp,
   ILogger,
+  IModify,
+  IPersistence,
+  IRead,
   ISettingRead
 } from "@rocket.chat/apps-engine/definition/accessors"
 import { App } from "@rocket.chat/apps-engine/definition/App"
@@ -13,6 +17,9 @@ import { InserDataSheetValues } from "./src/domain/usecases/insert-data-sheet-va
 import { GoogleSpreadSheets } from "./src/infra/gateways/google-spreadsheets"
 import { SubmitSlashcommand } from "./src/presentation/controllers/commands/submit-slashcommand"
 import { Settings } from "./src/main/config/settings"
+import { viewModalSuccess } from "./src/ui/components/modal-success"
+import { viewModalWarning } from "./src/ui/components/modal-warning"
+import { viewModalError } from "./src/ui/components/modal-error"
 
 export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHandler {
   public environments: Environments
@@ -32,19 +39,25 @@ export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHa
   }
 
   public async executeViewSubmitHandler (
-    context: UIKitViewSubmitInteractionContext
+    context: UIKitViewSubmitInteractionContext,
+    read: IRead,
+    http: IHttp,
+    persistence: IPersistence,
+    modify: IModify
   ): Promise<IUIKitResponse> {
     const data = context.getInteractionData()
     try {
-      await this.makeInsertDataSheetValues(data.view.state as object)
-      return {
-        success: true
+      const values = this.processData(data.view.state as object)
+
+      const result = await this.makeInsertDataSheetValues(values)
+
+      if (result instanceof Error) {
+        return viewModalWarning(modify, context, result.message)
       }
+
+      return viewModalSuccess(modify, context, "Your record has been saved in the spreadsheet")
     } catch (error) {
-      return context.getInteractionResponder().viewErrorResponse({
-        viewId: data.view.id,
-        errors: error
-      })
+      return viewModalError(modify, context, error.message ?? "An internal server error occurred")
     }
   }
 
@@ -74,18 +87,38 @@ export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHa
     this.getLogger().log(`SUCCESSFULLY CONFIGURED ENVIRONMENT`)
   }
 
-  private async makeInsertDataSheetValues (data: object): Promise<void> {
+  private async makeInsertDataSheetValues (data: object): Promise<Error | object> {
+    const defaultFields = ["NAME", "ROOM", "DATE/HOUR", "PHONE VISITOR", "AGENT"]
+
+    if (!this.dataIsValid(data)) {
+      return new Error("You cannot submit an empty form")
+    }
+
+    this.environments.setFieldsHeader(defaultFields.concat(this.environments.fieldsHeader))
+
+    const spreadsheetConnector = new GoogleSpreadSheets(this.environments, this.getAccessors().http)
+    const service = new InserDataSheetValues(spreadsheetConnector)
+    const result = await service.perform(data as any)
+
+    return result.isLeft()
+      ? new Error(result.value)
+      : result.value
+  }
+
+  private processData (data: object): object {
     const body = {}
     for (const [key, value] of Object.entries(data)) {
       body[key] = value[key]
     }
+    return body
+  }
 
-    const spreadsheetConnector = new GoogleSpreadSheets(this.environments, this.getAccessors().http)
-    const service = new InserDataSheetValues(spreadsheetConnector)
-    const result = await service.perform(body)
-
-    result.isLeft()
-      ? this.getLogger().log("Error in InserDataSheetValues", result.value)
-      : this.getLogger().log("Your record has been successfully entered", result.value)
+  private dataIsValid (data: object): boolean {
+    for (const [, value] of Object.entries(data)) {
+      if (!value.trim().length) {
+        return false
+      }
+    }
+    return true
   }
 }
