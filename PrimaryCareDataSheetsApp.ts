@@ -13,14 +13,13 @@ import { App } from "@rocket.chat/apps-engine/definition/App"
 import { IAppInfo } from "@rocket.chat/apps-engine/definition/metadata"
 import { IUIKitInteractionHandler, IUIKitResponse, UIKitViewSubmitInteractionContext } from "@rocket.chat/apps-engine/definition/uikit"
 import { Environments } from "./src/domain/entities/environments"
-import { InserDataSheetValues } from "./src/domain/usecases/insert-data-sheet-values"
-import { GoogleSpreadSheets } from "./src/infra/gateways/google-spreadsheets"
-import { SubmitSlashcommand } from "./src/presentation/controllers/commands/submit-slashcommand"
+import { SubmitSlashcommand } from "./src/presentation/commands/submit-slashcommand"
 import { Settings } from "./src/main/config/settings"
 import { viewModalSuccess } from "./src/ui/components/modal-success"
 import { viewModalWarning } from "./src/ui/components/modal-warning"
 import { viewModalError } from "./src/ui/components/modal-error"
 import { openContextualBar } from "./src/ui/components/contextual-bar"
+import { makeDataEntryController } from "./src/main/factories/presentation/controllers/data-entry-controller"
 
 export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHandler {
   public environments: Environments
@@ -47,10 +46,10 @@ export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHa
     modify: IModify
   ): Promise<IUIKitResponse> {
     const data = context.getInteractionData()
+    this.loadDefaultsFields()
     try {
-      const values = this.processData(data.view.state as object)
-
-      const result = await this.makeInsertDataSheetValues(values)
+      const controller = makeDataEntryController(this.environments, this.getAccessors().http)
+      const result = await controller.handle(data)
 
       if (result instanceof Error) {
         return viewModalWarning(modify, context, result.message)
@@ -88,38 +87,8 @@ export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHa
     this.getLogger().log(`SUCCESSFULLY CONFIGURED ENVIRONMENT`)
   }
 
-  private async makeInsertDataSheetValues (data: object): Promise<Error | object> {
+  private loadDefaultsFields (): void {
     const defaultFields = ["NAME", "ROOM", "DATE/HOUR", "PHONE VISITOR", "AGENT"]
-
-    if (!this.dataIsValid(data)) {
-      return new Error("You cannot submit an empty form")
-    }
-
     this.environments.setFieldsHeader(defaultFields.concat(this.environments.fieldsHeader))
-
-    const spreadsheetConnector = new GoogleSpreadSheets(this.environments, this.getAccessors().http)
-    const service = new InserDataSheetValues(spreadsheetConnector)
-    const result = await service.perform(data as any)
-
-    return result.isLeft()
-      ? new Error(result.value)
-      : result.value
-  }
-
-  private processData (data: object): object {
-    const body = {}
-    for (const [key, value] of Object.entries(data)) {
-      body[key] = value[key]
-    }
-    return body
-  }
-
-  private dataIsValid (data: object): boolean {
-    for (const [, value] of Object.entries(data)) {
-      if (!value.trim().length) {
-        return false
-      }
-    }
-    return true
   }
 }
