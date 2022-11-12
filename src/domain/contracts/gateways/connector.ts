@@ -1,12 +1,12 @@
 import { InternalServerError } from "../../../infra/errors/internal-server-error"
 import { Either } from "../../../main/shared/either"
 
-export interface SpreadSheet {
-  loadValuesInDataSheet: () => Promise<SpreadSheet.loadValuesInDataSheet.Result>
-  insertValuesInDataSheet: (params: SpreadSheet.insertValuesInDataSheet.Params) => Promise<SpreadSheet.insertValuesInDataSheet.Result>
+export interface Connector {
+  loadValuesInDataSheet: () => Promise<Connector.loadValuesInDataSheet.Result>
+  insertValuesInDataSheet: (params: Connector.insertValuesInDataSheet.Params) => Promise<Connector.insertValuesInDataSheet.Result>
 }
 
-export namespace SpreadSheet {
+export namespace Connector {
   export namespace loadValuesInDataSheet {
     export type Result = Either<InternalServerError, any[]>
   }

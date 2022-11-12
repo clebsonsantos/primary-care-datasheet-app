@@ -1,5 +1,5 @@
 import { Either, left, right } from "../../main/shared/either"
-import { SpreadSheet } from "../contracts/gateways/spreadsheet"
+import { Connector } from "../contracts/gateways/connector"
 
 export type ChangeDataSheet = {
   perform: () => Promise<Either<string, any[]>>
@@ -7,7 +7,7 @@ export type ChangeDataSheet = {
 
 export class ChangeDataSheetValues {
   constructor (
-    private readonly spreadSheetConnector: SpreadSheet
+    private readonly spreadSheetConnector: Connector
   ) {}
 
   public async perform (): Promise<Either<string, any[]>> {

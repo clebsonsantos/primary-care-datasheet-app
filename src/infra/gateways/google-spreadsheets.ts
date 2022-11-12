@@ -1,20 +1,19 @@
 import { IHttp } from "@rocket.chat/apps-engine/definition/accessors"
-import { SpreadSheet } from "../../domain/contracts/gateways/spreadsheet"
+import { Connector } from "../../domain/contracts/gateways/connector"
 import { Environments } from "../../domain/entities/environments"
 import { left, right } from "../../main/shared/either"
 import { InternalServerError } from "../errors/internal-server-error"
 
-export class GoogleSpreadSheets implements SpreadSheet {
+type ObjectData = {
+  [key: string]: string
+}
+export class GoogleSpreadSheets implements Connector {
   private readonly data: {
-    credentials: {
-      [key: string]: string
-    }
+    credentials: ObjectData
     fields: string[]
     spreadSheetId: string
     spreadSheetTabName: string
-    values?: {
-      [key: string]: string
-    }
+    values?: ObjectData
   }
 
   constructor (
@@ -29,7 +28,7 @@ export class GoogleSpreadSheets implements SpreadSheet {
     }
   }
 
-  public async loadValuesInDataSheet (): Promise<SpreadSheet.loadValuesInDataSheet.Result> {
+  public async loadValuesInDataSheet (): Promise<Connector.loadValuesInDataSheet.Result> {
     try {
       const result = await this.httpRequest.post(this.environments.urlApiConnector.concat("/spreadsheet/list"), {
         data: this.data
@@ -44,7 +43,7 @@ export class GoogleSpreadSheets implements SpreadSheet {
     }
   }
 
-  public async insertValuesInDataSheet ({ values }: SpreadSheet.insertValuesInDataSheet.Params): Promise<SpreadSheet.insertValuesInDataSheet.Result> {
+  public async insertValuesInDataSheet ({ values }: Connector.insertValuesInDataSheet.Params): Promise<Connector.insertValuesInDataSheet.Result> {
     try {
       this.data.values = values
       const result = await this.httpRequest.post(this.environments.urlApiConnector.concat("/spreadsheet/add"), {
