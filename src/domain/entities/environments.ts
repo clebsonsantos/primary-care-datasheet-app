@@ -9,9 +9,8 @@ export class Environments {
   public spreadSheetPageName: string
   public googleCrendentials: ObjectKey
 
-  constructor (params: Omit<Environments, "empty" | "isValid" | "getValue">) {
+  constructor (params: Omit<Environments, "empty" | "isValid" | "getValue" | "setFieldsHeader">) {
     Object.assign(this, params)
-    Object.freeze(this)
   }
 
   public static empty (): Environments {
@@ -39,5 +38,10 @@ export class Environments {
 
   public getValue (): this {
     return this
+  }
+
+  public setFieldsHeader (fields: string[]): void {
+    this.fieldsHeader = fields
+    Object.freeze(this)
   }
 }
