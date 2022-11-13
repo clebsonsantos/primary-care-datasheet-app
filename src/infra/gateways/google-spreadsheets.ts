@@ -7,7 +7,7 @@ import { InternalServerError } from "../errors/internal-server-error"
 type ObjectData = {
   [key: string]: string
 }
-export class GoogleSpreadSheets implements Connector {
+export class SpreadSheetConnector implements Connector {
   private readonly data: {
     credentials: ObjectData
     fields: string[]
