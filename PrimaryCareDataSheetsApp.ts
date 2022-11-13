@@ -10,7 +10,7 @@ import {
   ISettingRead
 } from "@rocket.chat/apps-engine/definition/accessors"
 import { App } from "@rocket.chat/apps-engine/definition/App"
-import { AppMethod, IAppInfo } from "@rocket.chat/apps-engine/definition/metadata"
+import { IAppInfo } from "@rocket.chat/apps-engine/definition/metadata"
 import { IUIKitInteractionHandler, IUIKitResponse, UIKitViewSubmitInteractionContext } from "@rocket.chat/apps-engine/definition/uikit"
 import { Environments } from "./src/domain/entities/environments"
 import { SubmitSlashcommand } from "./src/presentation/commands/submit-slashcommand"
@@ -25,9 +25,8 @@ import { makeDataEntryController } from "./src/main/factories/presentation/contr
 import { ContextualBarEnum } from "./src/ui/enum/contextual-bar"
 import { medicalRecordContextualBar } from "./src/ui/components/medical-record-contextual-bar"
 import { searchContextualBar } from "./src/ui/components/search-contextual-bar"
-import { ILivechatEventContext, IPostLivechatAgentAssigned } from "@rocket.chat/apps-engine/definition/livechat"
 
-export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHandler, IPostLivechatAgentAssigned {
+export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHandler {
   public environments: Environments
   private settingsRead: ISettingRead
   private readonly livechatVisitors: any[]
@@ -35,27 +34,6 @@ export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHa
   constructor (info: IAppInfo, logger: ILogger, accessors: IAppAccessors) {
     super(info, logger, accessors)
     this.livechatVisitors = []
-  }
-
-  async [AppMethod.EXECUTE_POST_LIVECHAT_AGENT_ASSIGNED] (context: ILivechatEventContext, read: IRead, http: IHttp, persis: IPersistence, modify?: IModify | undefined): Promise<void> {
-    try {
-      const room = context.room
-      const agent = context.agent
-
-      const date = new Date()
-
-      const data = {
-        NAME: room.visitor.name,
-        ROOM: room.id,
-        "DATE/HOUR": date.toLocaleString("pt-BR"),
-        "PHONE VISITOR": room.visitor.phone ?? "uninformed",
-        AGENT: agent.name
-      }
-      this.livechatVisitors.push(data)
-      this.getLogger().log("Visitor save in memory", data)
-    } catch (error) {
-      this.getLogger().log("Error", error)
-    }
   }
 
   override async onEnable (): Promise<boolean> {
@@ -121,7 +99,7 @@ export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHa
   }
 
   private loadDefaultsFields (): Environments {
-    const defaultFields = ["NAME", "ROOM", "DATE/HOUR", "PHONE VISITOR", "AGENT"]
+    const defaultFields = ["DATE/HOUR"]
     return this.environments.setFieldsHeader(defaultFields.concat(this.environments.fieldsHeader))
   }
 
@@ -131,6 +109,9 @@ export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHa
       data.view.state["ID"] = {
         ID: data.view.id
       }
+    }
+    (data.view as any).state["DATE/HOUR"] = {
+      "DATE/HOUR": new Date().toLocaleString("pt-BR")
     }
 
     const controller = makeDataEntryController(this.environments, this.getAccessors().http)
