@@ -1,0 +1,18 @@
+{
+    "record_has_ben_saved_response": "Os dados do prontuário foram salvos na planilha",
+    "invalid_request": "Requisição inválida",
+    "placeholder_input_block_element": "Digite um valor válido para",
+    "placeholder_select_block_element": "Selecione qual o campo para realizar a pesquisa",
+    "label_select_block_element": "Selecione um valor",
+    "medical_record_contextual_bar_title": "Prontuário medico",
+    "search_contextual_bar_title": "Pesquisa por um campo",
+    "success_modal_title": "Sucesso",
+    "warning_modal_title": "Atenção",
+    "error_modal_title": "Erro",
+    "button_close_title": "Fechar",
+    "button_submit_title": "Enviar",
+    "error_form_empty": "Você não pode enviar um formulário vazio",
+    "error_register_not_found": "Registro não encontrado",
+    "unexpected_error": "Ocorreu um erro ao realizar a pesquisa",
+    "internal_server_error": "Ocorreu um erro interno no servidor"
+}

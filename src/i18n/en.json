@@ -1,0 +1,18 @@
+{
+    "record_has_ben_saved_response": "Your record has been saved in the spreadsheet",
+    "invalid_request": "Invalid request with status code",
+    "placeholder_input_block_element": "Fill here with a valid value for",
+    "placeholder_select_block_element": "Select which field you want to search",
+    "label_select_block_element": "Selected field",
+    "medical_record_contextual_bar_title": "Medical record",
+    "search_contextual_bar_title": "Search by a field",
+    "success_modal_title": "Success",
+    "warning_modal_title": "Warning",
+    "error_modal_title": "Error",
+    "button_close_title": "Close",
+    "button_submit_title": "Submit",
+    "error_form_empty": "You cannot submit an empty form",
+    "error_register_not_found": "Registration not found",
+    "unexpected_error": "An error occurred while performing the search",
+    "internal_server_error": "An internal server error occurred"
+}

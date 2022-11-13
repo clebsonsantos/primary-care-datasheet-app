@@ -29,11 +29,9 @@ import { searchContextualBar } from "./src/ui/components/search-contextual-bar"
 export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHandler {
   public environments: Environments
   private settingsRead: ISettingRead
-  private readonly livechatVisitors: any[]
 
   constructor (info: IAppInfo, logger: ILogger, accessors: IAppAccessors) {
     super(info, logger, accessors)
-    this.livechatVisitors = []
   }
 
   override async onEnable (): Promise<boolean> {
@@ -66,7 +64,7 @@ export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHa
 
       return await this.savePatientData(modify, context)
     } catch (error) {
-      return viewModalError(modify, context, error.message ?? "An internal server error occurred")
+      return viewModalError(modify, context, error.message ?? this.environments.i18n?.internal_server_error)
     }
   }
 
@@ -89,8 +87,15 @@ export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHa
     })
     if (envSettings.isValid()) {
       this.environments = envSettings.getValue()
+      await this.loadI18n().catch(() => this.getLogger().log("error loading file i18n"))
       this.loadDefaultsFields()
     }
+  }
+
+  private async loadI18n (): Promise<void> {
+    const i18n = await this.settingsRead.getValueById("I18N")
+    const file = i18n === "en-US" ? require("./src/i18n/en.json") : require("./src/i18n/pt-br.json")
+    this.environments.setI18n(file)
   }
 
   private async loadSettings (): Promise<void> {
@@ -104,6 +109,8 @@ export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHa
   }
 
   private async savePatientData (modify: IModify, context: UIKitViewSubmitInteractionContext): Promise<IUIKitResponse> {
+    const i18n = await this.settingsRead.getValueById("I18N").catch(() => "en-US")
+
     const data = context.getInteractionData()
     if (data.view.state && data.view.id !== ContextualBarEnum.CONTEXTUAL_ID) {
       data.view.state["ID"] = {
@@ -111,7 +118,7 @@ export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHa
       }
     }
     (data.view as any).state["DATE/HOUR"] = {
-      "DATE/HOUR": new Date().toLocaleString("pt-BR")
+      "DATE/HOUR": new Date().toLocaleString(i18n)
     }
 
     const controller = makeDataEntryController(this.environments, this.getAccessors().http)
@@ -120,7 +127,7 @@ export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHa
     if (result instanceof Error) {
       return viewModalWarning(modify, context, result.message)
     }
-    return viewModalSuccess(modify, context, "Your record has been saved in the spreadsheet")
+    return viewModalSuccess(modify, context, this.environments.i18n?.record_has_ben_saved_response!)
   }
 
   private async fetchDataAndRenderOnView (modify: IModify, context: UIKitViewSubmitInteractionContext, isSelected: any): Promise<IUIKitResponse> {
@@ -129,7 +136,7 @@ export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHa
 
     if (result instanceof Error) {
       this.getLogger().log(result.message)
-      return viewModalSuccess(modify, context, "An error occurred while performing the search")
+      return viewModalSuccess(modify, context, this.environments.i18n?.unexpected_error!)
     }
 
     const fieldName: string = isSelected.selected.this
@@ -138,7 +145,7 @@ export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHa
     const patientData = generateFilter(result, fieldName.toLowerCase(), value)
 
     if (!patientData) {
-      return viewModalWarning(modify, context, "Registration not found")
+      return viewModalWarning(modify, context, this.environments.i18n?.error_register_not_found!)
     }
     return context.getInteractionResponder().openContextualBarViewResponse(medicalRecordContextualBar(modify, this.environments.fieldsHeader, patientData))
   }

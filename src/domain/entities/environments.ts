@@ -1,7 +1,9 @@
+import { I18nScope } from "./i18n"
+
 interface ObjectKey {
   [key: string]: string
 }
-type Env = Omit<Environments, "empty" | "isValid" | "getValue" | "setFieldsHeader">
+type Env = Omit<Environments, "empty" | "isValid" | "getValue" | "setFieldsHeader" | "setI18n">
 
 export class Environments {
   public spreadsheetsId: string
@@ -9,6 +11,7 @@ export class Environments {
   public fieldsHeader: string[]
   public spreadSheetPageName: string
   public googleCrendentials: ObjectKey
+  public i18n?: I18nScope
 
   constructor (params: Env) {
     Object.assign(this, params)
@@ -44,5 +47,9 @@ export class Environments {
   public setFieldsHeader (fields: string[]): this {
     this.fieldsHeader = fields
     return this
+  }
+
+  public setI18n (value: any): void {
+    this.i18n = value
   }
 }

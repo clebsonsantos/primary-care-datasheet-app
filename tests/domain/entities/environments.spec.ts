@@ -4,7 +4,7 @@ import { describe, it, beforeEach } from "mocha";
 
 
 describe("Environments", () => {
-let data: Omit<Environments, "getValue" | "isValid" | "setFieldsHeader">
+let data: Omit<Environments, "getValue" | "isValid" | "setFieldsHeader" | "setI18n">
     beforeEach(() => {
         data = {
             spreadsheetsId: "environmentFake",

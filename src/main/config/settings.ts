@@ -12,6 +12,21 @@ export class Settings {
     const sectionName = "PrimaryCareDataSheets"
 
     await this.configuration.settings.provideSetting({
+      id: "I18N",
+      type: SettingType.SELECT,
+      values: [
+        { key: "pt-BR", i18nLabel: "PT-BR" },
+        { key: "en-US", i18nLabel: "EN-US" }
+      ],
+      packageValue: "",
+      required: true,
+      public: false,
+      section: sectionName,
+      i18nLabel: "Select in which language you want to view the app responses",
+      i18nPlaceholder: "I18N_PLACE_HOLDER"
+    })
+
+    await this.configuration.settings.provideSetting({
       id: "SPREADSHEET_CONNECTOR_URL_API",
       type: SettingType.STRING,
       value: "",
