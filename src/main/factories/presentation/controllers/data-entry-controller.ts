@@ -7,5 +7,5 @@ import { makeGoogleSpreadsheetConnector } from "../../infra/gateways/spreadsheet
 export const makeDataEntryController = (environments: Environments, http: IHttp): DataEntryController => {
   const connector = makeGoogleSpreadsheetConnector(environments, http)
   const service = makeInsertDataSheetValues(connector)
-  return new DataEntryController(service)
+  return new DataEntryController(service, environments.i18n?.error_form_empty!)
 }

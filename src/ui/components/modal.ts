@@ -8,7 +8,8 @@ export class ModalViewResponse {
     private readonly context: UIKitViewSubmitInteractionContext,
     private readonly message: string,
     private readonly title: string,
-    private readonly id: string
+    private readonly id: string,
+    private readonly buttonCloseTitle: string
   ) {}
 
   public render (): IUIKitResponse {
@@ -31,7 +32,7 @@ export class ModalViewResponse {
       close: block.newButtonElement({
         text: {
           type: TextObjectType.PLAINTEXT,
-          text: "Close",
+          text: this.buttonCloseTitle,
           emoji: true
         },
         style: ButtonStyle.DANGER

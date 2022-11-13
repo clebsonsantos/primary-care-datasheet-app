@@ -35,7 +35,7 @@ export class SpreadSheetConnector implements Connector {
       })
 
       if (result.statusCode !== 200) {
-        return left(new InternalServerError(new Error(`Invalid request with status code ${result.statusCode}`)))
+        return left(new InternalServerError(new Error(`${this.environments.i18n?.invalid_request!} ${result.statusCode}`)))
       }
       return right(result.data)
     })
@@ -51,7 +51,7 @@ export class SpreadSheetConnector implements Connector {
       })
 
       if (result.statusCode !== 200) {
-        return left(new InternalServerError(new Error(`Invalid request with status code ${result.statusCode}`)))
+        return left(new InternalServerError(new Error(`${this.environments.i18n?.invalid_request!}  ${result.statusCode}`)))
       }
       return right(result.data.id)
     })

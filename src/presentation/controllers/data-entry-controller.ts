@@ -2,14 +2,17 @@ import { InserDataSheet } from "../../domain/usecases/insert-data-sheet-values"
 import { Controller } from "./controller"
 
 export class DataEntryController implements Controller {
-  constructor (private readonly service: InserDataSheet) {}
+  constructor (
+    private readonly service: InserDataSheet,
+    private readonly errori18n: string
+  ) {}
 
   async handle (data: object, processData?: boolean): Promise<Error | object> {
     try {
       const values = processData ? this.processData(data) : data
 
       if (!this.dataIsValid(values)) {
-        return new Error("You cannot submit an empty form")
+        return new Error(this.errori18n)
       }
 
       const result = await this.service.perform(values as any)

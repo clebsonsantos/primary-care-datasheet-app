@@ -1,9 +1,10 @@
 {
     "record_has_ben_saved_response": "Os dados do prontuário foram salvos na planilha",
     "invalid_request": "Requisição inválida",
-    "placeholder_input_block_element": "Digite um valor válido para",
+    "placeholder_input_block_element": "Digite um",
     "placeholder_select_block_element": "Selecione qual o campo para realizar a pesquisa",
-    "label_select_block_element": "Selecione um valor",
+    "label_select_block_element": "Selecione um dos campos",
+    "default_value_to_search_input_block": "Valor",
     "medical_record_contextual_bar_title": "Prontuário medico",
     "search_contextual_bar_title": "Pesquisa por um campo",
     "success_modal_title": "Sucesso",

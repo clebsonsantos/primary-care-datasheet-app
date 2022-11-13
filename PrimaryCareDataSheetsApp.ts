@@ -64,7 +64,7 @@ export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHa
 
       return await this.savePatientData(modify, context)
     } catch (error) {
-      return viewModalError(modify, context, error.message ?? this.environments.i18n?.internal_server_error)
+      return viewModalError(modify, context, error.message ?? this.environments.i18n?.internal_server_error, this.environments.i18n!)
     }
   }
 
@@ -73,8 +73,8 @@ export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHa
     await settings.createSettings()
     this.settingsRead = environmentRead.getSettings()
     await this.readEnvironmentSettings()
-    await configuration.slashCommands.provideSlashCommand(new SubmitSlashcommand(medicalRecordContextualBar))
-    await configuration.slashCommands.provideSlashCommand(new FindByFieldCommand(searchContextualBar))
+    await configuration.slashCommands.provideSlashCommand(new SubmitSlashcommand(medicalRecordContextualBar, this.environments))
+    await configuration.slashCommands.provideSlashCommand(new FindByFieldCommand(searchContextualBar, this.environments))
   }
 
   private async readEnvironmentSettings (): Promise<void> {
@@ -95,6 +95,7 @@ export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHa
   private async loadI18n (): Promise<void> {
     const i18n = await this.settingsRead.getValueById("I18N")
     const file = i18n === "en-US" ? require("./src/i18n/en.json") : require("./src/i18n/pt-br.json")
+    this.getLogger().log(i18n)
     this.environments.setI18n(file)
   }
 
@@ -125,9 +126,9 @@ export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHa
     const result = await controller.handle(data.view.state as object, true)
 
     if (result instanceof Error) {
-      return viewModalWarning(modify, context, result.message)
+      return viewModalWarning(modify, context, result.message, this.environments.i18n!)
     }
-    return viewModalSuccess(modify, context, this.environments.i18n?.record_has_ben_saved_response!)
+    return viewModalSuccess(modify, context, this.environments.i18n?.record_has_ben_saved_response!, this.environments.i18n!)
   }
 
   private async fetchDataAndRenderOnView (modify: IModify, context: UIKitViewSubmitInteractionContext, isSelected: any): Promise<IUIKitResponse> {
@@ -136,7 +137,7 @@ export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHa
 
     if (result instanceof Error) {
       this.getLogger().log(result.message)
-      return viewModalSuccess(modify, context, this.environments.i18n?.unexpected_error!)
+      return viewModalSuccess(modify, context, this.environments.i18n?.unexpected_error!, this.environments.i18n!)
     }
 
     const fieldName: string = isSelected.selected.this
@@ -145,8 +146,8 @@ export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHa
     const patientData = generateFilter(result, fieldName.toLowerCase(), value)
 
     if (!patientData) {
-      return viewModalWarning(modify, context, this.environments.i18n?.error_register_not_found!)
+      return viewModalWarning(modify, context, this.environments.i18n?.error_register_not_found!, this.environments.i18n!)
     }
-    return context.getInteractionResponder().openContextualBarViewResponse(medicalRecordContextualBar(modify, this.environments.fieldsHeader, patientData))
+    return context.getInteractionResponder().openContextualBarViewResponse(medicalRecordContextualBar(modify, this.environments.fieldsHeader, this.environments.i18n!, patientData))
   }
 }

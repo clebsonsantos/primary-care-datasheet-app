@@ -4,6 +4,7 @@ export type I18nScope = {
   placeholder_input_block_element: string
   placeholder_select_block_element: string
   label_select_block_element: string
+  default_value_to_search_input_block: string
   medical_record_contextual_bar_title: string
   search_contextual_bar_title: string
   success_modal_title: string
