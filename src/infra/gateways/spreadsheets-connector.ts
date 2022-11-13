@@ -29,7 +29,7 @@ export class SpreadSheetConnector implements Connector {
   }
 
   public async loadValuesInDataSheet (): Promise<Connector.loadValuesInDataSheet.Result> {
-    try {
+    return await this.resolver(async () => {
       const result = await this.httpRequest.post(this.environments.urlApiConnector.concat("/spreadsheet/list"), {
         data: this.data
       })
@@ -38,15 +38,15 @@ export class SpreadSheetConnector implements Connector {
         return left(new InternalServerError(new Error(`Invalid request with status code ${result.statusCode}`)))
       }
       return right(result.data)
-    } catch (error) {
-      return left(new InternalServerError(error))
-    }
+    })
   }
 
-  public async insertValuesInDataSheet ({ values }: Connector.insertValuesInDataSheet.Params): Promise<Connector.insertValuesInDataSheet.Result> {
-    try {
+  public async insertOrUpdateValuesInWorksheet ({ values }: Connector.insertOrUpdateValuesInWorksheet.Params): Promise<Connector.insertOrUpdateValuesInWorksheet.Result> {
+    return await this.resolver(async () => {
       this.data.values = values
-      const result = await this.httpRequest.post(this.environments.urlApiConnector.concat("/spreadsheet/add"), {
+      const callMethod = values.ID ? "update" : "add"
+
+      const result = await this.httpRequest.post(this.environments.urlApiConnector.concat(`/spreadsheet/${callMethod}`), {
         data: this.data
       })
 
@@ -54,6 +54,14 @@ export class SpreadSheetConnector implements Connector {
         return left(new InternalServerError(new Error(`Invalid request with status code ${result.statusCode}`)))
       }
       return right(result.data.id)
+    })
+  }
+
+  protected async resolver (handler: unknown): Promise<Error | any> {
+    try {
+      if (typeof handler === "function") {
+        return handler()
+      }
     } catch (error) {
       return left(new InternalServerError(error))
     }

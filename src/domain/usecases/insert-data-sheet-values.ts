@@ -13,7 +13,7 @@ export class InserDataSheetValues {
   ) {}
 
   public async perform (values: Input): Promise<Output> {
-    const data = await this.spreadSheetConnector.insertValuesInDataSheet({
+    const data = await this.spreadSheetConnector.insertOrUpdateValuesInWorksheet({
       values
     })
 

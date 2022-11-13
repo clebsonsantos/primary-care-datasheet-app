@@ -23,6 +23,7 @@ import { FindByFieldCommand } from "./src/presentation/commands/find-by-field-sl
 import { makeChangeDataController } from "./src/main/factories/presentation/controllers/change-data-controller"
 import { generateFilter } from "./src/main/utils/generate-filter"
 import { makeDataEntryController } from "./src/main/factories/presentation/controllers/data-entry-controller"
+import { ContextualBarEnum } from "./src/ui/enum/contextual-bar"
 
 export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHandler {
   public environments: Environments
@@ -81,6 +82,7 @@ export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHa
     })
     if (envSettings.isValid()) {
       this.environments = envSettings.getValue()
+      this.loadDefaultsFields()
     }
   }
 
@@ -96,8 +98,13 @@ export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHa
 
   private async savePatientData (modify: IModify, context: UIKitViewSubmitInteractionContext): Promise<IUIKitResponse> {
     const data = context.getInteractionData()
+    if (data.view.state && data.view.id !== ContextualBarEnum.CONTEXTUAL_ID) {
+      data.view.state["ID"] = {
+        ID: data.view.id
+      }
+    }
 
-    const controller = makeDataEntryController(this.loadDefaultsFields(), this.getAccessors().http)
+    const controller = makeDataEntryController(this.environments, this.getAccessors().http)
     const result = await controller.handle(data.view.state as object)
 
     if (result instanceof Error) {
@@ -107,7 +114,7 @@ export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHa
   }
 
   private async fetchDataAndRenderOnView (modify: IModify, context: UIKitViewSubmitInteractionContext, isSelected: any): Promise<IUIKitResponse> {
-    const controller = makeChangeDataController(this.loadDefaultsFields(), this.getAccessors().http)
+    const controller = makeChangeDataController(this.environments, this.getAccessors().http)
     const result = await controller.handle()
 
     if (result instanceof Error) {
@@ -119,6 +126,10 @@ export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHa
     const value: string = isSelected.input.value
 
     const patientData = generateFilter(result, fieldName.toLowerCase(), value)
+
+    if (!patientData) {
+      return viewModalWarning(modify, context, "Registration not found")
+    }
     return context.getInteractionResponder().openContextualBarViewResponse(openContextualBar(modify, this.environments.fieldsHeader, patientData))
   }
 }

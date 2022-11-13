@@ -1,6 +1,7 @@
 import { IModify } from "@rocket.chat/apps-engine/definition/accessors"
 import { ButtonStyle, TextObjectType } from "@rocket.chat/apps-engine/definition/uikit"
 import { IUIKitContextualBarViewParam } from "@rocket.chat/apps-engine/definition/uikit/UIKitInteractionResponder"
+import { ContextualBarEnum } from "../enum/contextual-bar"
 
 export type ContextualBar = (modify: IModify, fields: string[], defaultValues?: object) => IUIKitContextualBarViewParam
 export const openContextualBar: ContextualBar = (modify: IModify, fields: string[], defaultValues?: object): IUIKitContextualBarViewParam => {
@@ -28,7 +29,7 @@ export const openContextualBar: ContextualBar = (modify: IModify, fields: string
   }
 
   const contextualBar: IUIKitContextualBarViewParam = {
-    id: "primary-care-contextual-bar",
+    id: defaultValues ? defaultValues["id"] : ContextualBarEnum.CONTEXTUAL_ID,
     blocks: block.getBlocks(),
     title: { text: "Medical record", type: TextObjectType.PLAINTEXT },
     submit: block.newButtonElement({
@@ -37,7 +38,6 @@ export const openContextualBar: ContextualBar = (modify: IModify, fields: string
         text: "Submit"
       },
       style: ButtonStyle.PRIMARY
-
     })
   }
 

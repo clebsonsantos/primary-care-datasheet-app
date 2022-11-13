@@ -24,7 +24,8 @@
         "@typescript-eslint/no-useless-constructor": "off",
         "@typescript-eslint/quotes": ["error", "double",  { "allowTemplateLiterals": true }],
         "@typescript-eslint/strict-boolean-expressions": "off",
-        "@typescript-eslint/consistent-type-definitions": "off"
+        "@typescript-eslint/consistent-type-definitions": "off",
+        "@typescript-eslint/dot-notation": "off"
     },
     "ignorePatterns": ["tests/**/*.spec.ts", "dist/**", "coverage/**"],
     "root": true
