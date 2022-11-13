@@ -4,9 +4,9 @@ import { Controller } from "./controller"
 export class DataEntryController implements Controller {
   constructor (private readonly service: InserDataSheet) {}
 
-  async handle (data: object): Promise<Error | object> {
+  async handle (data: object, processData?: boolean): Promise<Error | object> {
     try {
-      const values = this.processData(data)
+      const values = processData ? this.processData(data) : data
 
       if (!this.dataIsValid(values)) {
         return new Error("You cannot submit an empty form")

@@ -13,6 +13,7 @@
     "classFile": "PrimaryCareDataSheetsApp.ts",
     "description": "Data sheets for the PrimaryCare.Chat platform",
     "implements": [
-        "IUIKitInteractionHandler"
+        "IUIKitInteractionHandler",
+        "IPostLivechatAgentAssigned"
     ]
 }
