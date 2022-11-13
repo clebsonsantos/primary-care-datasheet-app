@@ -18,12 +18,13 @@ import { Settings } from "./src/main/config/settings"
 import { viewModalSuccess } from "./src/ui/components/modal-success"
 import { viewModalWarning } from "./src/ui/components/modal-warning"
 import { viewModalError } from "./src/ui/components/modal-error"
-import { openContextualBar } from "./src/ui/components/contextual-bar"
 import { FindByFieldCommand } from "./src/presentation/commands/find-by-field-slashcommand"
 import { makeChangeDataController } from "./src/main/factories/presentation/controllers/change-data-controller"
 import { generateFilter } from "./src/main/utils/generate-filter"
 import { makeDataEntryController } from "./src/main/factories/presentation/controllers/data-entry-controller"
 import { ContextualBarEnum } from "./src/ui/enum/contextual-bar"
+import { medicalRecordContextualBar } from "./src/ui/components/medical-record-contextual-bar"
+import { searchContextualBar } from "./src/ui/components/search-contextual-bar"
 
 export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHandler {
   public environments: Environments
@@ -68,8 +69,8 @@ export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHa
     await settings.createSettings()
     this.settingsRead = environmentRead.getSettings()
     await this.readEnvironmentSettings()
-    await configuration.slashCommands.provideSlashCommand(new SubmitSlashcommand(openContextualBar))
-    await configuration.slashCommands.provideSlashCommand(new FindByFieldCommand())
+    await configuration.slashCommands.provideSlashCommand(new SubmitSlashcommand(medicalRecordContextualBar))
+    await configuration.slashCommands.provideSlashCommand(new FindByFieldCommand(searchContextualBar))
   }
 
   private async readEnvironmentSettings (): Promise<void> {
@@ -130,6 +131,6 @@ export class PrimaryCareDataSheetsApp extends App implements IUIKitInteractionHa
     if (!patientData) {
       return viewModalWarning(modify, context, "Registration not found")
     }
-    return context.getInteractionResponder().openContextualBarViewResponse(openContextualBar(modify, this.environments.fieldsHeader, patientData))
+    return context.getInteractionResponder().openContextualBarViewResponse(medicalRecordContextualBar(modify, this.environments.fieldsHeader, patientData))
   }
 }
