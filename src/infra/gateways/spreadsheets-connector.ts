@@ -60,7 +60,7 @@ export class SpreadSheetConnector implements Connector {
   protected async resolver (handler: unknown): Promise<Error | any> {
     try {
       if (typeof handler === "function") {
-        return handler()
+        return await Promise.resolve(handler())
       }
     } catch (error) {
       return left(new InternalServerError(error))
