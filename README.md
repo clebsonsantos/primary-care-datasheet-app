@@ -33,6 +33,13 @@ rc-apps deploy -v --url https://my-rocketchat.com --username my-username --passw
 
 ```
 
+## Run local tests
+
+```bash
+npm run test
+
+```
+
 ## Rocket.Chat documentation
 Here are some links to examples and documentation:
 - [Rocket.Chat Apps Definitions Documentation](https://rocketchat.github.io/Rocket.Chat.Apps-engine/)
