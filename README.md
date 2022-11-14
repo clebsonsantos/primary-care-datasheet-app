@@ -11,11 +11,15 @@ Tag this project with a star 🌟
   - /primary-care-medical-record 
   
     https://user-images.githubusercontent.com/60331806/201551918-1275607c-db5d-48ab-a6b7-daac12216454.mp4      
-     
+
   - /primary-care-find-by-field 
 
     https://user-images.githubusercontent.com/60331806/201552180-bc9fedde-225f-4c69-a63e-caab4f161d9c.mp4
 
+
+## Settings
+
+ <img src="./settings.png" width=700/>
 
 ## Use
 
