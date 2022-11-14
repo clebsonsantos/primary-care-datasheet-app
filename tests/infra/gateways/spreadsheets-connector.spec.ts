@@ -8,7 +8,7 @@ import { StubbedInstance, stubInterface } from "ts-sinon";
 import { Environments } from "../../../src/domain/entities/environments";
 import { InternalServerError } from "../../../src/infra/errors/internal-server-error";
 
-describe("FacebookApi", () => {
+describe("SpreadSheetConnector", () => {
     let sut: Connector
     let httpClient: StubbedInstance<IHttp>
     let environments: Environments
@@ -61,4 +61,42 @@ describe("FacebookApi", () => {
             result.isLeft() && assert.instanceOf(result.value, InternalServerError)
         })
     })
+
+    describe("insertOrUpdateValuesInWorksheet", () => {
+        it("should be return any id if the data is entered successfully", async () => {
+            httpClient.post.resolves({ statusCode: 200, method: RequestMethod.POST, url: urlConnector, data: { id: "any-id" } })
+
+            const result = await sut.insertOrUpdateValuesInWorksheet({
+                values: {}
+            })
+
+            expect(result.isRight()).to.be.ok
+            result.isRight() && assert.typeOf(result.value, "string")
+        })
+
+        it("should return InternalServerError if statusCode is different 200", async () => {
+            httpClient.post.resolves( { statusCode: 400, data: {}, method: RequestMethod.POST, url:urlConnector })
+
+            const result = await sut.insertOrUpdateValuesInWorksheet({
+                values: {}
+            })
+
+            expect(result.isLeft()).to.be.ok
+            result.isLeft() && assert.instanceOf(result.value, InternalServerError)
+        })
+
+        it("should be return InternalServerError if internal server error", async () => {
+            const error = new Error("internal_server_error")
+            httpClient.post.rejects(error)
+
+
+            const result = await sut.insertOrUpdateValuesInWorksheet({
+                values: {}
+            })
+
+            expect(result.isLeft()).to.be.ok
+            result.isLeft() && assert.instanceOf(result.value, InternalServerError)
+        })
+    })
+
 })
