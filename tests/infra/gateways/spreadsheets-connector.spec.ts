@@ -25,6 +25,9 @@ describe("SpreadSheetConnector", () => {
             spreadsheetsId: "spreadsheetId",
             urlApiConnector: urlConnector
         })
+        environments.setI18n({
+            invalid_request: "error"
+        })
 
         sut = new SpreadSheetConnector(environments, httpClient)
         httpClient.post.reset()
@@ -62,40 +65,56 @@ describe("SpreadSheetConnector", () => {
     })
 
     describe("insertOrUpdateValuesInWorksheet", () => {
-        it("should be return any id if the data is entered successfully", async () => {
-            httpClient.post.resolves({ statusCode: 200, method: RequestMethod.POST, url: urlConnector, data: { id: "any-id" } })
+       describe("add", () => {
+            it("should be return any id if the data is entered successfully", async () => {
+                httpClient.post.resolves({ statusCode: 200, method: RequestMethod.POST, url: urlConnector, data: { id: "any-id" } })
 
-            const result = await sut.insertOrUpdateValuesInWorksheet({
-                values: {}
+                const result = await sut.insertOrUpdateValuesInWorksheet({
+                    values: {}
+                })
+
+                expect(result.isRight()).to.be.ok
+                result.isRight() && assert.typeOf(result.value, "string")
             })
 
-            expect(result.isRight()).to.be.ok
-            result.isRight() && assert.typeOf(result.value, "string")
-        })
+            it("should return InternalServerError if statusCode is different 200", async () => {
+                httpClient.post.resolves( { statusCode: 400, data: {}, method: RequestMethod.POST, url:urlConnector })
 
-        it("should return InternalServerError if statusCode is different 200", async () => {
-            httpClient.post.resolves( { statusCode: 400, data: {}, method: RequestMethod.POST, url:urlConnector })
+                const result = await sut.insertOrUpdateValuesInWorksheet({
+                    values: {}
+                })
 
-            const result = await sut.insertOrUpdateValuesInWorksheet({
-                values: {}
+                expect(result.isLeft()).to.be.ok
+                result.isLeft() && assert.instanceOf(result.value, InternalServerError)
             })
 
-            expect(result.isLeft()).to.be.ok
-            result.isLeft() && assert.instanceOf(result.value, InternalServerError)
-        })
-
-        it("should be return InternalServerError if internal server error", async () => {
-            const error = new Error("internal_server_error")
-            httpClient.post.rejects(error)
+            it("should be return InternalServerError if internal server error", async () => {
+                const error = new Error("internal_server_error")
+                httpClient.post.rejects(error)
 
 
-            const result = await sut.insertOrUpdateValuesInWorksheet({
-                values: {}
+                const result = await sut.insertOrUpdateValuesInWorksheet({
+                    values: {}
+                })
+
+                expect(result.isLeft()).to.be.ok
+                result.isLeft() && assert.instanceOf(result.value, InternalServerError)
             })
+       })
+       describe("update", () => {
+            it("should be return any id if the data is updated successfully", async () => {
+                httpClient.post.resolves({ statusCode: 200, method: RequestMethod.POST, url: urlConnector, data: { id: "any-id" } })
 
-            expect(result.isLeft()).to.be.ok
-            result.isLeft() && assert.instanceOf(result.value, InternalServerError)
-        })
+                const result = await sut.insertOrUpdateValuesInWorksheet({
+                    values: {
+                        ID: "any-id"
+                    }
+                })
+
+                expect(result.isRight()).to.be.ok
+                result.isRight() && assert.typeOf(result.value, "string")
+            })
+       });
     })
 
 })
