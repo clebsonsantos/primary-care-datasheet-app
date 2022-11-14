@@ -27,4 +27,20 @@ let data: Omit<Environments, "getValue" | "isValid" | "setFieldsHeader" | "setI1
         const environment = Environments.empty()
         expect(environment.isValid()).to.be.not.ok
     })
+
+    it("should be able returns valid instace of Environment if setFieldsHeader calling", () => {
+        const environment = new Environments(data)
+        const env = environment.setFieldsHeader(["test", "test"])
+        expect(env.isValid()).to.be.ok
+    })
+
+    it("should be able to assign new values to i18n when setI18n is called", () => {
+        const environment = new Environments(data)
+        const label = {
+            any_label: "any_label"
+        }
+        environment.setI18n(label)
+        expect(environment.isValid()).to.be.ok
+        expect(environment.i18n).to.be.deep.equal(label)
+    })
 })
