@@ -7,6 +7,7 @@ The PrimaryCare.Chat application is used to record your attendances in digital m
 Tag this project with a star 🌟
 
 ## Demonstration
+
 - slash commands
   - /primary-care-medical-record 
   
