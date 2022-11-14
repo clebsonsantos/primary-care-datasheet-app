@@ -1,7 +1,6 @@
 import { SpreadSheetConnector } from './../../../src/infra/gateways/spreadsheets-connector';
 import { Connector } from './../../../src/domain/contracts/gateways/connector';
 import { IHttp, RequestMethod } from '@rocket.chat/apps-engine/definition/accessors';
-
 import { assert, expect } from "chai";
 import { describe, it } from "mocha";
 import { StubbedInstance, stubInterface } from "ts-sinon";
